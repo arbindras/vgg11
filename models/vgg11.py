@@ -120,3 +120,5 @@ class VGG11(nn.Module):
             return x5_pooled, features
         else:    
              return x5_pooled
+        
+VGG11Encoder = VGG11  # Alias for backward compatibility
