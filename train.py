@@ -350,11 +350,16 @@ def train_multitask(
 
         # Targets already on device — just cast dtypes
         labels = labels.long()
-        boxes  = boxes.float()
-        masks  = masks.long()               # FIX 1: cast to long for CE loss
+        # boxes  = boxes.float()
+        masks  = masks.long()   
+        H, W = 224, 224
+        boxes_px = boxes.float().clone()
+        boxes_px[:, [0, 2]] *= W   # cx, w
+        boxes_px[:, [1, 3]] *= H   # cy, h
+
 
         loss_cls = ce(out["classification"], labels)
-        loss_loc = iou(out["localization"], boxes) + l1(out["localization"], boxes)
+        loss_loc = iou(out["localization"], boxes_px) + l1(out["localization"], boxes_px)
         loss_seg = ce(out["segmentation"], masks) + dice(out["segmentation"], masks)
 
         total = loss_cls + loss_loc + loss_seg
@@ -499,8 +504,8 @@ if __name__ == "__main__":
     # ⚙️ Config
     # =========================
     DATA_ROOT  = ""
-    BATCH_SIZE = 64
-    SEG_BATCH  = 16      # segmentation needs smaller batches (full feature maps in decoder)
+    BATCH_SIZE = 32
+    SEG_BATCH  = 8      # segmentation needs smaller batches (full feature maps in decoder)
     EPOCHS     = 30
     IMG_SIZE   = 224
 
