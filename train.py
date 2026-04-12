@@ -257,7 +257,7 @@ def train_localization(model, train_loader, val_loader, epochs=10, lr=1e-4):
         boxes_pixel[:, 2] *= W   # w
         boxes_pixel[:, 3] *= H   # h
 
-        return 0.5*(mse(out, boxes_pixel) / (224 * 224)) + 0.5*iou(out, boxes_pixel)
+        return 0.3*(mse(out, boxes_pixel) / (224 * 224)) + 0.7*iou(out, boxes_pixel)
     def metric_fn(m, loader):
         return evaluate_localization(m, loader)
 
@@ -501,7 +501,7 @@ if __name__ == "__main__":
     DATA_ROOT  = ""
     BATCH_SIZE = 64
     SEG_BATCH  = 16      # segmentation needs smaller batches (full feature maps in decoder)
-    EPOCHS     = 15
+    EPOCHS     = 30
     IMG_SIZE   = 224
 
     # =========================
@@ -586,7 +586,7 @@ if __name__ == "__main__":
         train_loader_cls,
         val_loader_cls,
         epochs=EPOCHS,
-        lr=1e-4,
+        lr=3e-4,
     )
 
     # =========================
@@ -601,7 +601,7 @@ if __name__ == "__main__":
         train_loader_loc,
         val_loader_loc,
         epochs=EPOCHS,
-        lr=1e-4,
+        lr=5e-5,
     )
 
     # =========================
