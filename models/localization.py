@@ -6,8 +6,8 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-from layers import CustomDropout
-from vgg11 import VGG11
+from .layers import CustomDropout
+from .vgg11 import VGG11
 
 class VGG11Localizer(nn.Module):
     """VGG11-based localizer."""
