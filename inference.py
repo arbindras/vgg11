@@ -213,7 +213,12 @@ def evaluate_multitask(model: nn.Module, dataloader: torch.utils.data.DataLoader
         for images, labels, boxes, masks in dataloader:
             images    = images.to(dev)
             labels_np = _to_numpy(labels)
-            boxes_np  = _to_numpy(boxes)
+            boxes_np  = _to_numpy(boxes).copy()
+            H, W = 224, 224
+            boxes_np[:, 0] *= W
+            boxes_np[:, 1] *= H
+            boxes_np[:, 2] *= W
+            boxes_np[:, 3] *= H
             masks_np  = _to_numpy(masks)
 
             outputs = predict_multitask(model, images)

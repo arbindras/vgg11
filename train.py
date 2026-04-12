@@ -85,19 +85,21 @@ def worker_init_fn(worker_id):
 # =========================
 # 💾 Checkpointing
 # =========================
-def save_checkpoint(path, model, optimizer, scheduler, epoch, best_metric):
+# def save_checkpoint(path, model, optimizer, scheduler, epoch, best_metric):
+#     os.makedirs(os.path.dirname(path) or ".", exist_ok=True)
+#     torch.save(
+#         {
+#             "epoch": epoch,
+#             "best_metric": best_metric,
+#             "model_state": model.state_dict(),
+#             "optimizer_state": optimizer.state_dict(),
+#             "scheduler_state": scheduler.state_dict() if scheduler else None,
+#         },
+#         path,
+#     )
+def save_checkpoint(path, model, *args, **kwargs):
     os.makedirs(os.path.dirname(path) or ".", exist_ok=True)
-    torch.save(
-        {
-            "epoch": epoch,
-            "best_metric": best_metric,
-            "model_state": model.state_dict(),
-            "optimizer_state": optimizer.state_dict(),
-            "scheduler_state": scheduler.state_dict() if scheduler else None,
-        },
-        path,
-    )
-
+    torch.save(model.state_dict(), path)
 
 # =========================
 # 📦 Loss Functions

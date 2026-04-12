@@ -91,23 +91,10 @@ class MultiTaskPerceptionModel(nn.Module):
               "localization"   → [B, 4] normalized (cx, cy, w, h) in [0, 1]
               "segmentation"   → [B, seg_classes, H, W] logits
         """
-        # cls_out = self.classifier(x)
-        # loc_out = self.localizer(x)
-        # seg_out = self.segmenter(x)
         cls_out = self.classifier(x)
-
-        # convert normalized → pixel coordinates
-        B, _, H, W = x.shape
-        loc = self.localizer(x)  # normalized [0,1]
-
-        cx = loc[:, 0] * W
-        cy = loc[:, 1] * H
-        w  = loc[:, 2] * W
-        h  = loc[:, 3] * H
-
-        loc_out = torch.stack([cx, cy, w, h], dim=1)
-
+        loc_out = self.localizer(x)
         seg_out = self.segmenter(x)
+
 
         return {
             "classification": cls_out,
